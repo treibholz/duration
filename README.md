@@ -25,6 +25,16 @@ now edit ~/.duration.yaml to your needs.
 If you run it with less than two arguments, or if they can't be found in
 your configfile, the defaults are dynamic. (You'll be surprised!)
 
+### Dependencies
+
+On Debian, just type:
+
+```sh
+sudo apt-get install python3-selenium chromium-driver
+```
+
+If you use another operating-system, just install the equivalent packages.
+
 ## WTF? Why don't you just use the API?
 
 Well, to query the API, you need an API-key with [enabled billing](https://developers.google.com/maps/documentation/distance-matrix/intro).
