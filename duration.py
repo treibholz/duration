@@ -2,6 +2,7 @@
 import yaml
 import os
 import sys
+import datetime
 import distutils.spawn
 
 from selenium import webdriver
