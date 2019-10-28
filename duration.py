@@ -13,7 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 # Configuration
 configfile = os.path.expanduser(os.getenv('DURATION_CONF','~/.duration.yaml'))
 if os.path.isfile(configfile):
-    data = yaml.load(open(configfile))
+    data = yaml.load(open(configfile), Loader=yaml.BaseLoader)
 else:
     data =  { 'engine': 'google',
                 'google': {
@@ -24,7 +24,7 @@ else:
     yaml.dump(data, indent=2, default_flow_style=False, stream=f)
     f.close()
 
-engine = data['engine']
+engine = 'google'
 # opts (very primitive)
 try:
     origin = data[engine][sys.argv[1]]
@@ -74,4 +74,4 @@ except:
     # TODO: better exception handling
     print("OOPS: Something went wrong, try again! :-)")
 
-#driver.quit()
+driver.quit()
