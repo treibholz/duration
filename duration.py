@@ -4,6 +4,8 @@ import os
 import sys
 import datetime
 import distutils.spawn
+from time import sleep
+from random import random
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -11,14 +13,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # Configuration
-configfile = os.path.expanduser(os.getenv('DURATION_CONF','~/.duration.yaml'))
+configfile = os.path.expanduser(os.getenv('DURATION_CONF', '~/.duration.yaml'))
 if os.path.isfile(configfile):
     data = yaml.load(open(configfile), Loader=yaml.BaseLoader)
 else:
-    data =  { 'engine': 'google',
-                'google': {
+    data = {'engine': 'google',
+            'google': {
                     'home': 'Hauptstrasse 1, Neustadt',
-                    'work': 'Kirchgasse 1, Neustadt' }}
+                    'work': 'Kirchgasse 1, Neustadt'}}
     print("Writing stupid dummy configuration to {0}".format(configfile))
     f = open(configfile, 'w')
     yaml.dump(data, indent=2, default_flow_style=False, stream=f)
@@ -29,7 +31,7 @@ engine = 'google'
 try:
     origin = data[engine][sys.argv[1]]
     destination = data[engine][sys.argv[2]]
-except:
+except:  # noqa:E722
     if datetime.datetime.now().hour <= 12:
         origin = data[engine]['home']
         destination = data[engine]['work']
@@ -42,7 +44,7 @@ except:
 print("From: {0}\n  To: {1}\n".format(origin, destination))
 
 if engine == 'bing':
-    # VERY experimentaö
+    # VERY experimental
     base_url = 'https://www.bing.com/maps?osid={0}&cp={1}'
     url = base_url.format(origin, destination,)
     info_class_name = 'directionsRouteLink'
@@ -60,6 +62,13 @@ options.add_argument('incognito')
 driver = webdriver.Chrome(options=options)
 driver.get(url)
 
+print("Waiting to accept cookies...")
+sleep(0.5+random())
+# accept_cookies = driver.find_element_by_partial_link_text("Ich stimme zu")
+accept_cookies = driver.find_element(By.XPATH, '//button[1]')
+accept_cookies.click()
+print("Cookies accepted!\n")
+
 try:
     WebDriverWait(driver, 300).until(
         EC.presence_of_all_elements_located(
@@ -70,7 +79,7 @@ try:
 
     print(elem.text)
 
-except:
+except:  # noqa:E722
     # TODO: better exception handling
     print("OOPS: Something went wrong, try again! :-)")
 
